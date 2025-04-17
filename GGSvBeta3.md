@@ -3,6 +3,7 @@ local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local ESPButton = Instance.new("TextButton")
 local ColorButton = Instance.new("TextButton")
+local MenuButton = Instance.new("TextButton")
 
 -- Configurações básicas da UI
 ScreenGui.Name = "MENU_ESP"
@@ -15,6 +16,7 @@ MainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
 MainFrame.BackgroundTransparency = 0.5
 MainFrame.Size = UDim2.new(0, 200, 0, 110)
 MainFrame.Position = UDim2.new(0.5, -100, 0, 20)
+MainFrame.Visible = false -- Inicialmente oculto
 
 local MainFrameCorner = Instance.new("UICorner")
 MainFrameCorner.CornerRadius = UDim.new(0, 10) -- Arredondar os cantos do MainFrame
@@ -37,12 +39,24 @@ ColorButton.Parent = MainFrame
 ColorButton.BackgroundColor3 = Color3.new(0, 0, 0)
 ColorButton.Size = UDim2.new(0, 180, 0, 40)
 ColorButton.Position = UDim2.new(0, 10, 0, 60) -- Espaço entre os botões
-ColorButton.Text = "COR+"
+ColorButton.Text = "BRANCO" -- Texto inicial
 ColorButton.TextColor3 = Color3.new(1, 1, 1)
 
 local ColorButtonCorner = Instance.new("UICorner")
 ColorButtonCorner.CornerRadius = UDim.new(0, 10) -- Arredondar os cantos do botão
 ColorButtonCorner.Parent = ColorButton
+
+MenuButton.Name = "MenuButton"
+MenuButton.Parent = ScreenGui
+MenuButton.BackgroundColor3 = Color3.new(0, 0, 0)
+MenuButton.Size = UDim2.new(0, 50, 0, 30)
+MenuButton.Position = UDim2.new(0, 20, 0, 20) -- Canto superior esquerdo, um pouco para a direita
+MenuButton.Text = "M"
+MenuButton.TextColor3 = Color3.new(1, 1, 1)
+
+local MenuButtonCorner = Instance.new("UICorner")
+MenuButtonCorner.CornerRadius = UDim.new(0, 10) -- Arredondar os cantos do botão
+MenuButtonCorner.Parent = MenuButton
 
 -- Variáveis para ESP
 local ESPEnabled = false
@@ -75,13 +89,19 @@ end
 -- Função para mudar a cor do ESP
 local function changeESPColor()
     ESPColor = ESPColor == Color3.new(1, 1, 1) and Color3.new(1, 0, 0) or Color3.new(1, 1, 1) -- Alterna entre Branco e Vermelho
-    ColorButton.Text = ESPColor == Color3.new(1, 1, 1) and "COR+" or "COR-"
+    ColorButton.Text = ESPColor == Color3.new(1, 1, 1) and "BRANCO" or "VERMELHO" -- Atualiza o texto do botão
     if ESPEnabled then
         toggleESP()
         toggleESP() -- Atualiza as bordas existentes
     end
 end
 
+-- Função para exibir/ocultar o menu
+local function toggleMenu()
+    MainFrame.Visible = not MainFrame.Visible
+end
+
 -- Conexão dos botões às funções
 ESPButton.MouseButton1Click:Connect(toggleESP)
 ColorButton.MouseButton1Click:Connect(changeESPColor)
+MenuButton.MouseButton1Click:Connect(toggleMenu)
