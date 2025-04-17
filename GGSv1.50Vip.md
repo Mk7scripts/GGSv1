@@ -4,7 +4,8 @@ local MainFrame = Instance.new("Frame")
 local ESPButton = Instance.new("TextButton")
 local ColorButton = Instance.new("TextButton")
 local MenuButton = Instance.new("TextButton")
-local FOVButton = Instance.new("TextButton") -- Botão de FOV
+local FOVButton = Instance.new("TextButton")
+local SpeedButton = Instance.new("TextButton") -- Botão de Velocidade
 
 -- Configurações básicas da UI
 ScreenGui.Name = "MENU_ESP"
@@ -15,7 +16,7 @@ MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
 MainFrame.BackgroundTransparency = 0.5
-MainFrame.Size = UDim2.new(0, 200, 0, 200) -- Tamanho ajustado para incluir o botão de FOV e cores adicionais
+MainFrame.Size = UDim2.new(0, 200, 0, 250) -- Ajustado para incluir todos os botões
 MainFrame.Position = UDim2.new(0.5, -100, 0, 20)
 MainFrame.Visible = false -- Inicialmente oculto
 
@@ -51,13 +52,25 @@ FOVButton.Name = "FOVButton"
 FOVButton.Parent = MainFrame
 FOVButton.BackgroundColor3 = Color3.new(0, 0, 0)
 FOVButton.Size = UDim2.new(0, 180, 0, 40)
-FOVButton.Position = UDim2.new(0, 10, 0, 110) -- Posição abaixo dos outros botões
+FOVButton.Position = UDim2.new(0, 10, 0, 110)
 FOVButton.Text = "FOV: PADRÃO"
 FOVButton.TextColor3 = Color3.new(1, 1, 1)
 
 local FOVButtonCorner = Instance.new("UICorner")
 FOVButtonCorner.CornerRadius = UDim.new(0, 10)
 FOVButtonCorner.Parent = FOVButton
+
+SpeedButton.Name = "SpeedButton"
+SpeedButton.Parent = MainFrame
+SpeedButton.BackgroundColor3 = Color3.new(0, 0, 0)
+SpeedButton.Size = UDim2.new(0, 180, 0, 40)
+SpeedButton.Position = UDim2.new(0, 10, 0, 160)
+SpeedButton.Text = "VELOCIDADE: NORMAL"
+SpeedButton.TextColor3 = Color3.new(1, 1, 1)
+
+local SpeedButtonCorner = Instance.new("UICorner")
+SpeedButtonCorner.CornerRadius = UDim.new(0, 10)
+SpeedButtonCorner.Parent = SpeedButton
 
 MenuButton.Name = "MenuButton"
 MenuButton.Parent = ScreenGui
@@ -76,6 +89,9 @@ local ESPEnabled = false
 local ESPColor = Color3.new(1, 1, 1) -- Branco
 local FOVDefault = 70
 local FOVZoomed = 120
+local defaultWalkSpeed = 16 -- Velocidade padrão
+local increasedWalkSpeed = 50 -- Velocidade aumentada
+local isSpeedBoosted = false -- Para alternar entre velocidades
 
 -- Função para alternar ESP
 local function toggleESP()
@@ -103,15 +119,12 @@ end
 
 -- Função para alternar cores adicionais do ESP
 local function changeESPColor()
-    -- Lista de cores disponíveis
     local colors = {
         {color = Color3.new(1, 1, 1), name = "BRANCO"},
         {color = Color3.new(1, 0, 0), name = "VERMELHO"},
         {color = Color3.new(0, 0, 1), name = "AZUL"},
         {color = Color3.new(0, 1, 0), name = "VERDE"}
     }
-
-    -- Encontrar a próxima cor na lista
     local currentIndex
     for i, c in ipairs(colors) do
         if ESPColor == c.color then
@@ -119,15 +132,12 @@ local function changeESPColor()
             break
         end
     end
-
-    local nextIndex = (currentIndex % #colors) + 1 -- Passar para a próxima cor
+    local nextIndex = (currentIndex % #colors) + 1
     ESPColor = colors[nextIndex].color
-    ColorButton.Text = colors[nextIndex].name -- Atualizar o texto do botão
-
-    -- Atualizar o ESP se estiver ativo
+    ColorButton.Text = colors[nextIndex].name
     if ESPEnabled then
         toggleESP()
-        toggleESP() -- Atualiza as bordas existentes
+        toggleESP()
     end
 end
 
@@ -143,6 +153,16 @@ local function toggleFOV()
     end
 end
 
+-- Função para alternar velocidade
+local function toggleSpeed()
+    local character = game.Players.LocalPlayer.Character
+    if character and character:FindFirstChild("Humanoid") then
+        isSpeedBoosted = not isSpeedBoosted
+        character.Humanoid.WalkSpeed = isSpeedBoosted and increasedWalkSpeed or defaultWalkSpeed
+        SpeedButton.Text = isSpeedBoosted and "VELOCIDADE: RÁPIDA" or "VELOCIDADE: NORMAL"
+    end
+end
+
 -- Função para alternar menu
 local function toggleMenu()
     MainFrame.Visible = not MainFrame.Visible
@@ -152,4 +172,5 @@ end
 ESPButton.MouseButton1Click:Connect(toggleESP)
 ColorButton.MouseButton1Click:Connect(changeESPColor)
 FOVButton.MouseButton1Click:Connect(toggleFOV)
+SpeedButton.MouseButton1Click:Connect(toggleSpeed)
 MenuButton.MouseButton1Click:Connect(toggleMenu)
