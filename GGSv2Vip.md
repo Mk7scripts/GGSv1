@@ -17,7 +17,7 @@ MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
 MainFrame.BackgroundTransparency = 0.5
 MainFrame.Size = UDim2.new(0, 200, 0, 250) -- Ajustado para incluir todos os botões
-MainFrame.Position = UDim2.new(0.5, -100, 0, 20)
+MainFrame.Position = UDim2.new(0.5, -100, 0, -300) -- Inicialmente fora da tela
 MainFrame.Visible = false -- Inicialmente oculto
 
 local MainFrameCorner = Instance.new("UICorner")
@@ -163,9 +163,23 @@ local function toggleSpeed()
     end
 end
 
--- Função para alternar menu
-local function toggleMenu()
-    MainFrame.Visible = not MainFrame.Visible
+-- Função para animar o menu (deslizar suavemente)
+local function animateMenu()
+    if MainFrame.Visible then
+        -- Ocultar o menu com animação
+        for i = 1, 10 do
+            MainFrame.Position = MainFrame.Position - UDim2.new(0, 0, 0.1, 0)
+            wait(0.02) -- Controla a velocidade da animação
+        end
+        MainFrame.Visible = false
+    else
+        -- Exibir o menu com animação
+        MainFrame.Visible = true
+        for i = 1, 10 do
+            MainFrame.Position = MainFrame.Position + UDim2.new(0, 0, 0.1, 0)
+            wait(0.02) -- Controla a velocidade da animação
+        end
+    end
 end
 
 -- Conexões
@@ -173,4 +187,4 @@ ESPButton.MouseButton1Click:Connect(toggleESP)
 ColorButton.MouseButton1Click:Connect(changeESPColor)
 FOVButton.MouseButton1Click:Connect(toggleFOV)
 SpeedButton.MouseButton1Click:Connect(toggleSpeed)
-MenuButton.MouseButton1Click:Connect(toggleMenu)
+MenuButton.MouseButton1Click:Connect(animateMenu)
