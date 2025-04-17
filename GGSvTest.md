@@ -21,6 +21,10 @@ ESPButton.Size = UDim2.new(0, 180, 0, 40)
 ESPButton.Position = UDim2.new(0, 10, 0, 10)
 ESPButton.Text = "ESP+"
 ESPButton.TextColor3 = Color3.new(1, 1, 1)
+ESPButton.BorderSizePixel = 0
+ESPButton.AutoButtonColor = false
+ESPButton.BackgroundTransparency = 0.2
+ESPButton.UICorner = Instance.new("UICorner", ESPButton) -- Tornando os botões arredondados
 
 ColorButton.Name = "ColorButton"
 ColorButton.Parent = MainFrame
@@ -29,6 +33,10 @@ ColorButton.Size = UDim2.new(0, 180, 0, 40)
 ColorButton.Position = UDim2.new(0, 10, 0, 50)
 ColorButton.Text = "COR+"
 ColorButton.TextColor3 = Color3.new(1, 1, 1)
+ColorButton.BorderSizePixel = 0
+ColorButton.AutoButtonColor = false
+ColorButton.BackgroundTransparency = 0.2
+ColorButton.UICorner = Instance.new("UICorner", ColorButton) -- Tornando os botões arredondados
 
 -- Função para ativar/desativar ESP
 local ESPEnabled = false
@@ -38,20 +46,22 @@ local function toggleESP()
     ESPEnabled = not ESPEnabled
     ESPButton.Text = ESPEnabled and "ESP-" or "ESP+"
     for _, player in pairs(game.Players:GetPlayers()) do
-        if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            if ESPEnabled then
-                local box = Instance.new("BoxHandleAdornment")
-                box.Name = "ESPBox"
-                box.Parent = player.Character.HumanoidRootPart
-                box.Adornee = player.Character.HumanoidRootPart
-                box.Size = Vector3.new(4, 6, 4)
-                box.Color3 = ESPColor
-                box.Transparency = 0.5
-                box.ZIndex = 0
-                box.AlwaysOnTop = true
-            else
-                if player.Character.HumanoidRootPart:FindFirstChild("ESPBox") then
-                    player.Character.HumanoidRootPart.ESPBox:Destroy()
+        if player ~= game.Players.LocalPlayer and player.Character and player.Character:FindFirstChild("Humanoid") then
+            for _, part in pairs(player.Character:GetChildren()) do
+                if part:IsA("BasePart") then
+                    if ESPEnabled then
+                        local outline = Instance.new("SelectionBox")
+                        outline.Name = "ESPOutline"
+                        outline.Parent = part
+                        outline.Adornee = part
+                        outline.Color3 = ESPColor
+                        outline.LineThickness = 0.05
+                        outline.SurfaceTransparency = 0
+                    else
+                        if part:FindFirstChild("ESPOutline") then
+                            part.ESPOutline:Destroy()
+                        end
+                    end
                 end
             end
         end
