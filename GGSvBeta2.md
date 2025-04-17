@@ -6,17 +6,18 @@ local ColorButton = Instance.new("TextButton")
 
 -- Configurações básicas da UI
 ScreenGui.Name = "MENU_ESP"
+ScreenGui.ResetOnSpawn = false -- Mantém a interface mesmo após a morte
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
 MainFrame.BackgroundTransparency = 0.5
-MainFrame.Size = UDim2.new(0, 200, 0, 100)
+MainFrame.Size = UDim2.new(0, 200, 0, 110)
 MainFrame.Position = UDim2.new(0.5, -100, 0, 20)
 
 local MainFrameCorner = Instance.new("UICorner")
-MainFrameCorner.CornerRadius = UDim.new(0, 10) -- Botões arredondados
+MainFrameCorner.CornerRadius = UDim.new(0, 10) -- Arredondar os cantos do MainFrame
 MainFrameCorner.Parent = MainFrame
 
 ESPButton.Name = "ESPButton"
@@ -28,19 +29,19 @@ ESPButton.Text = "ESP+"
 ESPButton.TextColor3 = Color3.new(1, 1, 1)
 
 local ESPButtonCorner = Instance.new("UICorner")
-ESPButtonCorner.CornerRadius = UDim.new(0, 10)
+ESPButtonCorner.CornerRadius = UDim.new(0, 10) -- Arredondar os cantos do botão
 ESPButtonCorner.Parent = ESPButton
 
 ColorButton.Name = "ColorButton"
 ColorButton.Parent = MainFrame
 ColorButton.BackgroundColor3 = Color3.new(0, 0, 0)
 ColorButton.Size = UDim2.new(0, 180, 0, 40)
-ColorButton.Position = UDim2.new(0, 10, 0, 50)
+ColorButton.Position = UDim2.new(0, 10, 0, 60) -- Espaço entre os botões
 ColorButton.Text = "COR+"
 ColorButton.TextColor3 = Color3.new(1, 1, 1)
 
 local ColorButtonCorner = Instance.new("UICorner")
-ColorButtonCorner.CornerRadius = UDim.new(0, 10)
+ColorButtonCorner.CornerRadius = UDim.new(0, 10) -- Arredondar os cantos do botão
 ColorButtonCorner.Parent = ColorButton
 
 -- Variáveis para ESP
@@ -58,7 +59,7 @@ local function toggleESP()
                     local highlight = Instance.new("Highlight")
                     highlight.Name = "HighlightESP"
                     highlight.Parent = player.Character
-                    highlight.FillTransparency = 1 -- Totalmente transparente, apenas bordas
+                    highlight.FillTransparency = 1 -- Totalmente transparente
                     highlight.OutlineTransparency = 0 -- Bordas visíveis
                     highlight.OutlineColor = ESPColor
                 end
@@ -77,7 +78,7 @@ local function changeESPColor()
     ColorButton.Text = ESPColor == Color3.new(1, 1, 1) and "COR+" or "COR-"
     if ESPEnabled then
         toggleESP()
-        toggleESP() -- Atualiza a cor das bordas
+        toggleESP() -- Atualiza as bordas existentes
     end
 end
 
