@@ -53,20 +53,18 @@ local function toggleESP()
     ESPButton.Text = ESPEnabled and "ESP-" or "ESP+"
     for _, player in pairs(game.Players:GetPlayers()) do
         if player ~= game.Players.LocalPlayer and player.Character then
-            for _, part in pairs(player.Character:GetChildren()) do
-                if part:IsA("BasePart") then
-                    if ESPEnabled then
-                        local highlight = Instance.new("Highlight")
-                        highlight.Name = "ESPHighlight"
-                        highlight.Parent = part
-                        highlight.FillTransparency = 1
-                        highlight.OutlineColor = ESPColor
-                        highlight.OutlineTransparency = 0
-                    else
-                        if part:FindFirstChild("ESPHighlight") then
-                            part.ESPHighlight:Destroy()
-                        end
-                    end
+            if ESPEnabled then
+                if not player.Character:FindFirstChild("HighlightESP") then
+                    local highlight = Instance.new("Highlight")
+                    highlight.Name = "HighlightESP"
+                    highlight.Parent = player.Character
+                    highlight.FillTransparency = 1 -- Totalmente transparente, apenas bordas
+                    highlight.OutlineTransparency = 0 -- Bordas visíveis
+                    highlight.OutlineColor = ESPColor
+                end
+            else
+                if player.Character:FindFirstChild("HighlightESP") then
+                    player.Character.HighlightESP:Destroy()
                 end
             end
         end
@@ -75,11 +73,11 @@ end
 
 -- Função para mudar a cor do ESP
 local function changeESPColor()
-    ESPColor = ESPColor == Color3.new(1, 1, 1) and Color3.new(1, 0, 0) or Color3.new(1, 1, 1) -- Branco ou Vermelho
+    ESPColor = ESPColor == Color3.new(1, 1, 1) and Color3.new(1, 0, 0) or Color3.new(1, 1, 1) -- Alterna entre Branco e Vermelho
     ColorButton.Text = ESPColor == Color3.new(1, 1, 1) and "COR+" or "COR-"
     if ESPEnabled then
         toggleESP()
-        toggleESP() -- Atualiza bordas com nova cor
+        toggleESP() -- Atualiza a cor das bordas
     end
 end
 
