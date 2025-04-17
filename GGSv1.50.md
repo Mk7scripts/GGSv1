@@ -15,7 +15,7 @@ MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
 MainFrame.BackgroundTransparency = 0.5
-MainFrame.Size = UDim2.new(0, 200, 0, 160) -- Tamanho ajustado para incluir o botão de FOV
+MainFrame.Size = UDim2.new(0, 200, 0, 200) -- Tamanho ajustado para incluir o botão de FOV e cores adicionais
 MainFrame.Position = UDim2.new(0.5, -100, 0, 20)
 MainFrame.Visible = false -- Inicialmente oculto
 
@@ -62,7 +62,7 @@ FOVButtonCorner.Parent = FOVButton
 MenuButton.Name = "MenuButton"
 MenuButton.Parent = ScreenGui
 MenuButton.BackgroundColor3 = Color3.new(0, 0, 0)
-MenuButton.Size = UDim2.new(0, 50, 0, 30)
+MenuButton.Size = UDim2.new(0, 80, 0, 50) -- Tamanho aumentado para maior visibilidade
 MenuButton.Position = UDim2.new(0, 20, 0, 20) -- Canto superior esquerdo
 MenuButton.Text = "M"
 MenuButton.TextColor3 = Color3.new(1, 1, 1)
@@ -101,13 +101,33 @@ local function toggleESP()
     end
 end
 
--- Função para mudar cor do ESP
+-- Função para alternar cores adicionais do ESP
 local function changeESPColor()
-    ESPColor = ESPColor == Color3.new(1, 1, 1) and Color3.new(1, 0, 0) or Color3.new(1, 1, 1)
-    ColorButton.Text = ESPColor == Color3.new(1, 1, 1) and "BRANCO" or "VERMELHO"
+    -- Lista de cores disponíveis
+    local colors = {
+        {color = Color3.new(1, 1, 1), name = "BRANCO"},
+        {color = Color3.new(1, 0, 0), name = "VERMELHO"},
+        {color = Color3.new(0, 0, 1), name = "AZUL"},
+        {color = Color3.new(0, 1, 0), name = "VERDE"}
+    }
+
+    -- Encontrar a próxima cor na lista
+    local currentIndex
+    for i, c in ipairs(colors) do
+        if ESPColor == c.color then
+            currentIndex = i
+            break
+        end
+    end
+
+    local nextIndex = (currentIndex % #colors) + 1 -- Passar para a próxima cor
+    ESPColor = colors[nextIndex].color
+    ColorButton.Text = colors[nextIndex].name -- Atualizar o texto do botão
+
+    -- Atualizar o ESP se estiver ativo
     if ESPEnabled then
         toggleESP()
-        toggleESP()
+        toggleESP() -- Atualiza as bordas existentes
     end
 end
 
